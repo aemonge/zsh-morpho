@@ -28,7 +28,7 @@ crowsize = 7
 configs=[ #CA#   #CB#    #iter.# #internal mul.#   #factor#  #smooth mul."   #a, b, both#
           10.0,  23.39,  14,     0.0084,           1.122,    0.3,            2,
           10.0,  23.39,  14,     0.0105,           1.422,    0.309,          3,
-          10.0,  23.39,  14,     0.0105,           0.1422,   0.48,           2,
+          10.0,  23.39,  14,     0.0105,           0.1422,   0.490,           2,
 ] 
 
 CA = 10.0
@@ -282,9 +282,9 @@ def cursor_visibility(onoff):
     sys.stdout.flush()
 # }}}
 
-alternate_screen("on")
+#alternate_screen("on")
 cursor_visibility("off")
-atexit.register(alternate_screen, 'off')
+#atexit.register(alternate_screen, 'off')
 atexit.register(cursor_visibility, 'on')
 
 #
@@ -293,19 +293,28 @@ atexit.register(cursor_visibility, 'on')
 
 try:
 
-    #random.seed(4)
-    #random.seed(9)
-    #random.seed(10)
-    #random.seed(18)
-    #random.seed(35)
-    #random.seed(62)
-    #random.seed(76)
-    #random.seed(93)
-    #random.seed(192)
-    #random.seed(384)
+    #random.seed(427), crow=1 (no crow needed)
+    #random.seed(483), crow=3
+    #random.seed(537)
+    #random.seed(719) <-
+    #random.seed(2628)
+    #random.seed(2811) <-
+    #random.seed(6064)
+    #random.seed(7113) crow=2
+    #random.seed(7150) crow=2
+    #random.seed(7203) crow=2 <-
+    #random.seed(7821) crow=2
+    #random.seed(7855) crow=2
+
+    #random.seed(718)
+
+    seed=1
+    seed=7854
 
     # Main loop
     while True:
+        seed = seed + 1
+        #random.seed(seed)
         height_str, width_str = os.popen('stty size', 'r').read().split()
         height=int(height_str)
         width=int(width_str)
@@ -321,6 +330,7 @@ try:
 
         crows = len(configs) / crowsize
         crow = random.randint(1,crows)
+        #crow = 2
         cidx = (crow-1)*crowsize
 
         CA=configs[cidx]
@@ -339,9 +349,10 @@ try:
 
         morpho_render()
 
-        time.sleep(3)
+        time.sleep(6)
 
 except (KeyboardInterrupt, SystemExit):
+        atexit.register(sys.stdout.write, "Seed was: " + str(seed) + ", crow was: " + str(crow) + "\n")
         raise
 
 # vim:ft=python
